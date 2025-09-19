@@ -3,25 +3,59 @@ package ua.opnu;
 public class BankAccount {
     String name;
     double balance;
-    double transactionFee;
+    double transactionFee = 1.0;  // Для простоти встановлюємо фіксовану комісію
 
+    // Конструктор без параметрів
+    BankAccount() {
+        name = "Daniel Ivanov's Bank Account";
+        balance = 0.0;
+    }
+
+    // Конструктор з параметрами
+    BankAccount(String name, double balance) {
+        this.name = name;
+        if (balance > 0) {
+            this.balance = balance;
+        } else {
+            this.balance = 0.0; // Задаємо мінімальний баланс
+        }
+    }
+
+    // Метод для поповнення рахунку
     void deposit(double amount) {
-        // TODO: modify method body
-        balance = balance + amount;
+        if (amount > 0) {
+            balance += amount;
+        }
     }
 
-    double getBalance() {
-        return this.balance;
-    }
-
+    // Метод для зняття коштів
     boolean withdraw(double amount) {
-        // TODO: modify method body
-        balance = balance - amount;
-        return true;
+        if (amount > 0 && balance >= amount + transactionFee) {
+            balance -= amount + transactionFee;
+            return true;
+        }
+        return false;
     }
 
+    // Метод для переказу коштів на інший рахунок
     boolean transfer(BankAccount receiver, double amount) {
-        // TODO: modify method body
+        if (receiver == null || amount <= 0) {
+            return false;
+        }
+        if (this.withdraw(amount)) {
+            receiver.deposit(amount);
+            return true;
+        }
         return false;
+    }
+
+    // Отримання балансу
+    double getBalance() {
+        return balance;
+    }
+
+    // Метод для отримання імені рахунку
+    String getName() {
+        return name;
     }
 }
